@@ -15,8 +15,12 @@ exports.createProduct = catchAsyncError(async (req, res, next) => {
 
 //Get all products
 exports.getAllProducts = catchAsyncError(async (req, res) => {
-  let limit = 7;
-  if (req.query.limit) limit = Number(req.query.limit);
+  let limit;
+  if (req.query.limit) {
+    limit = Number(req.query.limit);
+  } else {
+    limit = 7;
+  }
 
   const apiFeatures = new ApiFeatures(Product.find(), req.query)
     .serach()
