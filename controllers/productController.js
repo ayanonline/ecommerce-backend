@@ -2,6 +2,7 @@ const Product = require("../models/productModel");
 const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncError = require("../midleware/catchAsyncError");
 const ApiFeatures = require("../utils/apifeatures");
+
 //Create Product -Admin
 exports.createProduct = catchAsyncError(async (req, res, next) => {
   req.body.user = req.user.id;
@@ -17,17 +18,24 @@ exports.getAllProducts = catchAsyncError(async (req, res) => {
   let limit = 7;
   if (req.query.limit) limit = Number(req.query.limit);
 
-  const productCount = await Product.countDocuments();
   const apiFeatures = new ApiFeatures(Product.find(), req.query)
     .serach()
     .filter()
     .pagination(limit);
-  // const products = await Product.find();
+
+  //without pagination
+  const apiFeaturesforcount = new ApiFeatures(Product.find(), req.query)
+    .serach()
+    .filter();
+
+  // this is return all products without pagination
+  const serachProducts = await apiFeaturesforcount.query;
+
   const products = await apiFeatures.query;
   res.status(200).json({
     success: true,
     products,
-    total: productCount,
+    total: serachProducts.length,
     limit,
   });
 });
