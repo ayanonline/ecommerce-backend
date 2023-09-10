@@ -14,7 +14,7 @@ const connectDatabase = () => {
       // family: 4,
     })
     .then((data) => {
-      console.log(`Mongodb connected with server: ${data.connection.host}`);
+      console.log(`Mongodb connected with server successfully`);
     });
 };
 

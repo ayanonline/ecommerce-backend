@@ -4,8 +4,11 @@ const cookiParser = require("cookie-parser");
 const cors = require("cors");
 const app = express();
 
+const bodyParser = require("body-parser");
+
 app.use(express.json());
 app.use(cookiParser());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // cross domain
 app.all("/*", function (req, res, next) {

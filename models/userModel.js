@@ -23,17 +23,7 @@ const userSchema = new mongoose.Schema({
     minLength: [8, "Password should be greater than 8 characters"],
     select: false,
   },
-  avatar: {
-    public_id: {
-      type: String,
-      required: true,
-    },
-    url: {
-      type: String,
-      required: true,
-    },
-  },
-
+  avatar: String,
   role: {
     type: String,
     default: "user",
@@ -49,6 +39,14 @@ userSchema.pre("save", async function (next) {
     next();
   }
   this.password = await bcrypt.hash(this.password, 10);
+});
+
+userSchema.pre("save", function (next) {
+  if (!this.isNew) next();
+  if (!this.avatar) {
+    this.avatar = `https://api.dicebear.com/7.x/initials/svg?seed=${this.name}`;
+  }
+  next();
 });
 
 //JWT
