@@ -19,6 +19,8 @@ app.all("/*", function (req, res, next) {
   );
   next();
 });
+app.use(cors());
+app.options("*", cors());
 
 //Route imports
 const productRoute = require("./routes/productRoute");
@@ -26,10 +28,10 @@ const userRoute = require("./routes/userRoute");
 const orderRoute = require("./routes/orderRoute");
 const cartRoute = require("./routes/cartRoute");
 
-app.use("/api/v1", productRoute);
-app.use("/api/v1/", userRoute);
-app.use("/api/v1/", orderRoute);
-app.use("/api/v1/", cartRoute);
+app.use("/api/v1/product", productRoute);
+app.use("/api/v1/user", userRoute);
+app.use("/api/v1/order", orderRoute);
+app.use("/api/v1/cart", cartRoute);
 
 //error middleware for error
 app.use(errMidleware);

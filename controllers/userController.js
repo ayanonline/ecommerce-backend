@@ -2,6 +2,7 @@ const crypto = require("crypto");
 const AWS = require("aws-sdk");
 const multerS3 = require("multer-s3");
 const multer = require("multer");
+require("dotenv").config();
 
 const Product = require("../models/productModel");
 const ErrorHandler = require("../utils/errorHandler");
@@ -11,7 +12,7 @@ const sendToken = require("../utils/jwtToken");
 const sendEmail = require("../utils/sendEmail.js");
 
 require("aws-sdk/lib/maintenance_mode_message").suppress = true;
-
+// console.log(process.env);
 // AWS s3 configuration
 const s3Config = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY,
@@ -52,16 +53,14 @@ const upload = multer({
   },
 });
 
-exports.uploadPhoto = upload.single("avatar");
-exports.uploadUserPhoto = catchAsyncError(async (req, res, next) => {
-  console.log(req.file);
-  res.status(200).json({
-    success: true,
-  });
-});
+exports.uploadUserPhoto = upload.single("avatar");
 
 //Register user
 exports.registerUser = catchAsyncError(async (req, res, next) => {
+  if (req.file) {
+    req.body.avatar = req.file.location;
+  }
+
   const user = await User.create(req.body);
 
   //Calling getJWTToken method
@@ -205,16 +204,19 @@ exports.updatePassword = catchAsyncError(async (req, res, next) => {
 
 // Update user Profile
 exports.updateProfile = catchAsyncError(async (req, res, next) => {
-  const newUserData = {
-    name: req.body.name,
-    email: req.body.email,
-  };
+  if (req.body.password) {
+    return next(new ErrorHandler("This route is not for password update", 400));
+  }
 
-  const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
+  if (req.file) {
+    req.body.avatar = req.file.location;
+  }
+
+  const user = await User.findByIdAndUpdate(req.user.id, req.body, {
     new: true,
     runValidators: true,
-    useFindAndModify: false,
   });
+
   res.status(200).json({
     success: true,
     user,
