@@ -12,7 +12,7 @@ const sendToken = require("../utils/jwtToken");
 const sendEmail = require("../utils/sendEmail.js");
 
 require("aws-sdk/lib/maintenance_mode_message").suppress = true;
-// console.log(process.env);
+
 // AWS s3 configuration
 const s3Config = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY,
