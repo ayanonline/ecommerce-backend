@@ -2,10 +2,36 @@ const Product = require("../models/productModel");
 const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncError = require("../midleware/catchAsyncError");
 const ApiFeatures = require("../utils/apifeatures");
+const upload = require("../config/awsS3");
+
+exports.uploadProductPhotos = upload.fields([
+  {
+    name: "thumbnail",
+    maxCount: 1,
+  },
+  {
+    name: "images",
+    maxCount: 6,
+  },
+]);
+
+exports.addProductPhotos = (req, res, next) => {
+  // console.log(req.files);
+  if (req.files && req.files.thumbnail) {
+    req.body.thumbnail = req.files.thumbnail[0].location;
+  }
+
+  req.body.images = [];
+  if (req.files?.images) {
+    req.files.images.forEach((item) => req.body.images.push(item.location));
+  }
+  next();
+};
 
 //Create Product -Admin
 exports.createProduct = catchAsyncError(async (req, res, next) => {
   req.body.user = req.user.id;
+
   const product = await Product.create(req.body);
   res.status(201).json({
     success: true,

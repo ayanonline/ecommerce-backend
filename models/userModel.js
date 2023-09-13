@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema({
   resetPasswordExpire: Date,
 });
 
-//hashing password using bcrypt
+// hashing password using bcrypt
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     next();
@@ -41,6 +41,7 @@ userSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, 10);
 });
 
+//
 userSchema.pre("save", function (next) {
   if (!this.isNew) next();
   if (!this.avatar) {

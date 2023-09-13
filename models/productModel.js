@@ -27,14 +27,8 @@ const productSchema = new mongoose.Schema({
   },
   images: [
     {
-      public_id: {
-        type: String,
-        required: true,
-      },
-      url: {
-        type: String,
-        required: true,
-      },
+      type: String,
+      required: [true, "Atleast one product image should be provided"],
     },
   ],
   category: {
