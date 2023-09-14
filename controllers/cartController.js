@@ -112,8 +112,27 @@ exports.getAllCart = catchAsyncError(async (req, res, next) => {
     });
   }
 
+  const itemsWithSubtotals = cart.items.map((item) => {
+    const product = item.product;
+    const quantity = item.quantity;
+    const subtotal = product.price * quantity;
+    return { ...item.toObject(), subtotal };
+  });
+
+  const totalAmount = itemsWithSubtotals.reduce(
+    (total, item) => total + item.subtotal,
+    0
+  );
+
+  const cartWithSubtotals = {
+    ...cart.toObject(),
+    items: itemsWithSubtotals,
+    totalAmount,
+    totalItems: itemsWithSubtotals.length,
+  };
+
   res.status(200).json({
     success: true,
-    cart,
+    cart: cartWithSubtotals,
   });
 });
