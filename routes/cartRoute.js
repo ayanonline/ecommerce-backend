@@ -1,25 +1,17 @@
 const express = require("express");
-// iport all controller here
 
-const { isAuthenticatedUser, authorizeRoles } = require("../midleware/auth");
-const {
-  addToCart,
-  updateCart,
-  removeItem,
-  getAllCart,
-} = require("../controllers/cartController");
+const authController = require("../middleware/auth");
+const cartController = require("../controllers/cartController");
 
 const router = express.Router();
 
-// Add item to Cart
-router.route("/add").post(isAuthenticatedUser, addToCart);
+router.use(authController.isAuthenticatedUser);
 
-// Update Cart item
-router.route("/update").put(isAuthenticatedUser, updateCart);
+router.route("/").get(cartController.getAllCart).post(cartController.addToCart);
 
-// Remove item from cart
-router.route("/remove").delete(isAuthenticatedUser, removeItem);
+router
+  .route("/:id")
+  .patch(cartController.updateCart)
+  .delete(cartController.removeItem);
 
-// Retrieve Cart contents
-router.route("/").get(isAuthenticatedUser, getAllCart);
 module.exports = router;

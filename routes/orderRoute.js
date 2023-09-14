@@ -7,12 +7,12 @@ const {
   updateOrderStatus,
   deleteOrder,
 } = require("../controllers/orderController");
-const { isAuthenticatedUser, authorizeRoles } = require("../midleware/auth");
+const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
 
 const router = express.Router();
 
 // new order route
-router.route("/order/new").post(isAuthenticatedUser, newOrder);
+router.route("/new").post(isAuthenticatedUser, newOrder);
 
 //Get single order details
 router.route("/order/:id").get(isAuthenticatedUser, getSingleOrder);

@@ -6,7 +6,7 @@ const crypto = require("crypto");
 
 const Product = require("../models/productModel");
 const ErrorHandler = require("../utils/errorHandler");
-const catchAsyncError = require("../midleware/catchAsyncError");
+const catchAsyncError = require("../middleware/catchAsyncError");
 const User = require("../models/userModel");
 const sendToken = require("../utils/jwtToken");
 const sendEmail = require("../utils/sendEmail");

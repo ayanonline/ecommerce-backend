@@ -11,7 +11,7 @@ const {
   uploadProductPhotos,
   addProductPhotos,
 } = require("../controllers/productController");
-const { isAuthenticatedUser, authorizeRoles } = require("../midleware/auth");
+const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
 
 const router = express.Router();
 

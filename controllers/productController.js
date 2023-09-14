@@ -1,8 +1,9 @@
 const Product = require("../models/productModel");
 const ErrorHandler = require("../utils/errorHandler");
-const catchAsyncError = require("../midleware/catchAsyncError");
+const catchAsyncError = require("../middleware/catchAsyncError");
 const ApiFeatures = require("../utils/apifeatures");
 const upload = require("../config/awsS3");
+const handleFactory = require("./handleFactory");
 
 exports.uploadProductPhotos = upload.fields([
   {
@@ -29,15 +30,7 @@ exports.addProductPhotos = (req, res, next) => {
 };
 
 //Create Product -Admin
-exports.createProduct = catchAsyncError(async (req, res, next) => {
-  req.body.user = req.user.id;
-
-  const product = await Product.create(req.body);
-  res.status(201).json({
-    success: true,
-    product,
-  });
-});
+exports.createProduct = handleFactory.createOne(Product, true);
 
 //Get all products
 exports.getAllProducts = catchAsyncError(async (req, res) => {
@@ -71,49 +64,13 @@ exports.getAllProducts = catchAsyncError(async (req, res) => {
 });
 
 //Get product details
-exports.getProductDetail = catchAsyncError(async (req, res, next) => {
-  const product = await Product.findById(req.params.id);
-  if (!product) {
-    return next(new ErrorHandler("Product not found", 404));
-  }
-  res.status(200).json({
-    success: true,
-    product,
-  });
-});
+exports.getProductDetail = handleFactory.getOne(Product);
 
 //Update product --Admin
-exports.updateProduct = catchAsyncError(async (req, res, next) => {
-  let product = await Product.findById(req.params.id);
-
-  if (!product) {
-    return next(new ErrorHandler("Product not found", 404));
-  }
-  //updating product here
-  product = await Product.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-    useFindAndModify: false,
-  });
-  res.status(200).json({
-    success: true,
-    product,
-  });
-});
+exports.updateProduct = handleFactory.updateOne(Product);
 
 //Delete product --Admin
-exports.deleteProduct = catchAsyncError(async (req, res, next) => {
-  const product = await Product.findById(req.params.id);
-  if (!product) {
-    return next(new ErrorHandler("Product not found", 404));
-  }
-
-  await product.remove();
-  res.status(200).json({
-    success: true,
-    message: "Product deleted successfully",
-  });
-});
+exports.deleteProduct = handleFactory.deleteOne(Product);
 
 // Create new Review or Update the review
 exports.createProductReview = catchAsyncError(async (req, res, next) => {

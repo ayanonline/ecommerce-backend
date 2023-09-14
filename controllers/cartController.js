@@ -1,6 +1,6 @@
 const Cart = require("../models/cartModel");
 const ErrorHandler = require("../utils/errorHandler");
-const catchAsyncError = require("../midleware/catchAsyncError");
+const catchAsyncError = require("../middleware/catchAsyncError");
 
 // Add item to Cart
 exports.addToCart = catchAsyncError(async (req, res, next) => {
@@ -16,7 +16,7 @@ exports.addToCart = catchAsyncError(async (req, res, next) => {
 
   // Check if the product is already in the cart
   const existingCartItem = cart.items.find(
-    (item) => item.product.toString() === productId
+    (item) => item.product._id.toString() === productId
   );
 
   if (existingCartItem) {
@@ -47,9 +47,7 @@ exports.updateCart = catchAsyncError(async (req, res, next) => {
   );
 
   if (!cartItem) {
-    return res
-      .status(404)
-      .json({ success: false, message: "Item not found in cart" });
+    return next(new ErrorHandler("Item not found in cart", 404));
   }
 
   // Update the quantity
@@ -77,7 +75,7 @@ exports.removeItem = catchAsyncError(async (req, res, next) => {
   );
 
   if (cartItemIndex === -1) {
-    res.status(404).json({ success: false, message: "Item not found in cart" });
+    return next(new ErrorHandler("Item not found in cart", 40));
   }
 
   // Remove the item from the cart
@@ -97,19 +95,10 @@ exports.getAllCart = catchAsyncError(async (req, res, next) => {
   const userId = req.user.id;
 
   // find the user's Cart
-  const cart = await Cart.findOne({ user: userId }).populate({
-    path: "items",
-    populate: {
-      path: "product",
-      select: "name price thumbnail quantity",
-    },
-  });
+  const cart = await Cart.findOne({ user: userId });
 
   if (!cart) {
-    return res.status(400).json({
-      success: false,
-      message: "Cart not found",
-    });
+    return next(new ErrorHandler("Cart not found", 400));
   }
 
   const itemsWithSubtotals = cart.items.map((item) => {
