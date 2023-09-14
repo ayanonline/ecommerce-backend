@@ -101,7 +101,7 @@ exports.getAllCart = catchAsyncError(async (req, res, next) => {
     path: "items",
     populate: {
       path: "product",
-      select: "name price thumbnail",
+      select: "name price thumbnail quantity",
     },
   });
 

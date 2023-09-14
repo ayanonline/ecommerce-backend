@@ -21,5 +21,5 @@ router.route("/update").put(isAuthenticatedUser, updateCart);
 router.route("/remove").delete(isAuthenticatedUser, removeItem);
 
 // Retrieve Cart contents
-router.route("/:userId").get(isAuthenticatedUser, getAllCart);
+router.route("/").get(isAuthenticatedUser, getAllCart);
 module.exports = router;
