@@ -97,7 +97,13 @@ exports.getAllCart = catchAsyncError(async (req, res, next) => {
   const userId = req.user.id;
 
   // find the user's Cart
-  const cart = await Cart.findOne({ user: userId });
+  const cart = await Cart.findOne({ user: userId }).populate({
+    path: "items",
+    populate: {
+      path: "product",
+      select: "name price thumbnail",
+    },
+  });
 
   if (!cart) {
     return res.status(400).json({
