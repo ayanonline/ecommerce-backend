@@ -64,19 +64,20 @@ exports.updateCart = catchAsyncError(async (req, res, next) => {
 // Remove item from Cart
 exports.removeItem = catchAsyncError(async (req, res, next) => {
   const userId = req.user.id;
-  const { productId } = req.body;
+  const productId = req.params.id;
 
   // Find the user's cart
   const cart = await Cart.findOne({ user: userId });
 
+  if (!cart) return next(new ErrorHandler("Cart not found", 404));
+
   // Find the cart item to remove
   const cartItemIndex = cart.items.findIndex(
-    (item) => item.product.toString() === productId
+    (item) => item.product._id.toString() === productId
   );
 
-  if (cartItemIndex === -1) {
-    return next(new ErrorHandler("Item not found in cart", 40));
-  }
+  if (cartItemIndex === -1)
+    return next(new ErrorHandler("Item not found in cart", 404));
 
   // Remove the item from the cart
   cart.items.splice(cartItemIndex, 1);
