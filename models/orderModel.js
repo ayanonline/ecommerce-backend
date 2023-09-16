@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema({
   shippingInfo: {
+    name: {
+      type: String,
+      required: true,
+    },
     address: {
       type: String,
       required: true,
@@ -14,41 +18,42 @@ const orderSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
-    country: {
-      type: String,
-      required: true,
-    },
-    pinCode: {
+    pincode: {
       type: Number,
       required: true,
     },
-    phoneNo: {
+    locality: {
+      type: String,
+      required: true,
+    },
+    phoneNumber: {
       type: Number,
       required: true,
     },
   },
   orderItems: [
     {
-      name: {
-        type: String,
-        required: true,
-      },
-      price: {
-        type: Number,
-        required: true,
+      product: {
+        name: {
+          type: String,
+          required: true,
+        },
+        price: {
+          type: Number,
+          required: true,
+        },
+        thumbnail: {
+          type: String,
+          required: true,
+        },
       },
       quantity: {
         type: Number,
-        required: true,
+        required: [true, "Product must have quantity"],
       },
-      image: {
-        type: String,
-        required: true,
-      },
-      product: {
-        type: mongoose.Schema.ObjectId,
-        ref: "Product",
-        required: true,
+      subtotal: {
+        type: Number,
+        required: [true, "Product must have subtotal"],
       },
     },
   ],
