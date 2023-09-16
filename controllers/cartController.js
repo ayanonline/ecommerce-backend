@@ -36,14 +36,15 @@ exports.addToCart = catchAsyncError(async (req, res, next) => {
 // Update Cart item
 exports.updateCart = catchAsyncError(async (req, res, next) => {
   const userId = req.user.id;
-  const { productId, quantity } = req.body;
+  const { quantity } = req.body;
+  const productId = req.params.id;
 
   // Find the user's cart
   const cart = await Cart.findOne({ user: userId });
 
   // Find the cart item to update
   const cartItem = cart.items.find(
-    (item) => item.product.toString() === productId
+    (item) => item.product._id.toString() === productId
   );
 
   if (!cartItem) {
