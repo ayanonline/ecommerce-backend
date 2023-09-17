@@ -5,9 +5,9 @@ const ErrorHandler = require("../utils/errorHandler");
 
 exports.getUserAddress = catchAsyncError(async (req, res, next) => {
   const userId = req.user.id;
-  console.log(userId);
+
   const doc = await Address.find({ user: userId });
-  console.log(doc);
+
   if (!doc)
     return next(new ErrorHandler("No Addresss found with that user id", 404));
 
