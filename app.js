@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //   next();
 // });
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: ["http://localhost:5173", "https://your-freshgrocery.netlify.app/"],
   credentials: true, // Allow credentials (cookies)
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
 };
