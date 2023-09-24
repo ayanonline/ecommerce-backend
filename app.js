@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // cross domain
 // app.use((req, res, next) => {
-//   res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+//   res.setHeader("Access-Control-Allow-Origin", "*");
 //   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT,PATCH, DELETE");
 //   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 //   res.setHeader("Access-Control-Allow-Credentials", "true"); // Set this to 'true'
@@ -24,7 +24,7 @@ const corsOptions = {
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
 };
 app.use(cors(corsOptions));
-app.options("*", cors());
+// app.options("*", cors());
 
 //Route imports
 const productRoute = require("./routes/productRoute");
