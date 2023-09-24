@@ -10,21 +10,12 @@ app.use(express.json());
 app.use(cookiParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// cross domain
-// app.use((req, res, next) => {
-//   res.setHeader("Access-Control-Allow-Origin", "*");
-//   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT,PATCH, DELETE");
-//   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-//   res.setHeader("Access-Control-Allow-Credentials", "true"); // Set this to 'true'
-//   next();
-// });
 const corsOptions = {
   origin: ["http://localhost:5173", "https://your-freshgrocery.netlify.app"],
   credentials: true, // Allow credentials (cookies)
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
 };
 app.use(cors(corsOptions));
-// app.options("*", cors());
 
 //Route imports
 const productRoute = require("./routes/productRoute");
