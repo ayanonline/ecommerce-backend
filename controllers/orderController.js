@@ -1,7 +1,9 @@
 const Order = require("../models/orderModel");
 const Product = require("../models/productModel");
+const Cart = require("../models/cartModel");
 const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncError = require("../middleware/catchAsyncError");
+const calculateCartPrice = require("../utils/calculateCartPrice");
 
 // Create new Order
 exports.newOrder = catchAsyncError(async (req, res, next) => {
@@ -120,3 +122,77 @@ exports.deleteOrder = catchAsyncError(async (req, res, next) => {
     success: true,
   });
 });
+
+//stripe
+
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+
+exports.getCheckoutSession = catchAsyncError(async (req, res, next) => {
+  const cart = await Cart.findById(req.params.cartId);
+  const cartData = calculateCartPrice(cart);
+
+  // 2) Create checkout session
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ["card"],
+    success_url: `http://localhost:5173/profile/order-list`,
+    cancel_url: `http://localhost:5173/checkout`,
+    customer_email: req.user.email,
+    client_reference_id: req.params.cartId,
+    line_items: [
+      {
+        price_data: {
+          currency: "inr",
+          product_data: {
+            name: "Your order",
+            // description: "test description",
+            images: [
+              `https://static.vecteezy.com/system/resources/thumbnails/008/559/332/small/pay-now-text-button-web-button-banner-template-pay-now-vector.jpg`,
+            ],
+          },
+          unit_amount: cartData.totalAmount * 100,
+        },
+        quantity: 1,
+      },
+    ],
+    mode: "payment",
+  });
+
+  // 3) Create session as response
+  res.status(200).json({
+    status: "success",
+    session,
+  });
+});
+
+const createBookingCheckout = async (session) => {
+  const tour = session.client_reference_id;
+  const user = (await User.findOne({ email: session.customer_email })).id;
+  const price = session.amount_total / 100;
+  await Booking.create({ tour, user, price });
+};
+
+exports.webhookCheckout = (req, res, next) => {
+  const signature = req.headers["stripe-signature"];
+
+  let event;
+  try {
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      signature,
+      process.env.STRIPE_WEBHOOK_SECRET
+    );
+  } catch (err) {
+    return res.status(400).send(`Webhook error: ${err.message}`);
+  }
+
+  if (event.type === "checkout.session.completed")
+    createBookingCheckout(event.data.object);
+
+  res.status(200).json({ received: true });
+};
+
+// // exports.createBooking = factory.createOne(Booking);
+// // exports.getBooking = factory.getOne(Booking);
+// // exports.getAllBookings = factory.getAll(Booking);
+// // exports.updateBooking = factory.updateOne(Booking);
+// // exports.deleteBooking = factory.deleteOne(Booking);

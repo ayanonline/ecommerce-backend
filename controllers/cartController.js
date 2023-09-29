@@ -1,6 +1,7 @@
 const Cart = require("../models/cartModel");
 const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncError = require("../middleware/catchAsyncError");
+const calculateCartPrice = require("../utils/calculateCartPrice");
 
 // Add item to Cart
 exports.addToCart = catchAsyncError(async (req, res, next) => {
@@ -102,26 +103,7 @@ exports.getAllCart = catchAsyncError(async (req, res, next) => {
   if (!cart) {
     return next(new ErrorHandler("Cart not found", 400));
   }
-
-  const itemsWithSubtotals = cart.items.map((item) => {
-    const product = item.product;
-    const quantity = item.quantity;
-    const subtotal = product.price * quantity;
-    return { ...item.toObject(), subtotal };
-  });
-
-  const totalAmount = itemsWithSubtotals.reduce(
-    (total, item) => total + item.subtotal,
-    0
-  );
-
-  const cartWithSubtotals = {
-    ...cart.toObject(),
-    items: itemsWithSubtotals,
-    totalAmount,
-    totalItems: itemsWithSubtotals.length,
-  };
-
+  const cartWithSubtotals = calculateCartPrice(cart);
   res.status(200).json({
     success: true,
     cart: cartWithSubtotals,

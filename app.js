@@ -3,6 +3,7 @@ const errMidleware = require("./middleware/error");
 const cookiParser = require("cookie-parser");
 const cors = require("cors");
 const app = express();
+const helmet = require("helmet");
 
 const bodyParser = require("body-parser");
 
@@ -16,6 +17,7 @@ const corsOptions = {
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
 };
 app.use(cors(corsOptions));
+app.use(helmet());
 
 //Route imports
 const productRoute = require("./routes/productRoute");

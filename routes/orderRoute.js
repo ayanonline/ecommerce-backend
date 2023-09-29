@@ -1,18 +1,21 @@
 const express = require("express");
 const {
-  newOrder,
   getSingleOrder,
   myOrders,
   getAllOrders,
   updateOrderStatus,
   deleteOrder,
+  getCheckoutSession,
 } = require("../controllers/orderController");
+
 const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
 
 const router = express.Router();
 
 // new order route
-router.route("/").post(isAuthenticatedUser, newOrder);
+router
+  .route("/checkout-session/:cartId")
+  .get(isAuthenticatedUser, getCheckoutSession);
 
 //Get single order details
 router.route("/:id").get(isAuthenticatedUser, getSingleOrder);
