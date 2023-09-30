@@ -19,8 +19,6 @@ const corsOptions = {
   ],
   credentials: true, // Allow credentials (cookies)
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-  crossorigin: true,
-  mode: "no-cors",
 };
 app.use(cors(corsOptions));
 // app.use(helmet());
