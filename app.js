@@ -12,7 +12,11 @@ app.use(cookiParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const corsOptions = {
-  origin: ["http://localhost:5173", "https://your-freshgrocery.netlify.app"],
+  origin: [
+    "http://localhost:5173",
+    "https://your-freshgrocery.netlify.app",
+    "http://your-freshgrocery.s3-website.ap-south-1.amazonaws.com/",
+  ],
   credentials: true, // Allow credentials (cookies)
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
 };
