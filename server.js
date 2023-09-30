@@ -16,8 +16,8 @@ process.on("uncaughtException", (err) => {
 connectDatabase();
 
 const options = {
-  key: fs.readFileSync("./config/key.pem"),
-  cert: fs.readFileSync("./config/cert.pem"),
+  key: fs.readFileSync("./certificates/key.pem"),
+  cert: fs.readFileSync("./certificates/cert.pem"),
 };
 
 const port = process.env.PORT || 5000;
