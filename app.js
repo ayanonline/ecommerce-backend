@@ -17,7 +17,7 @@ const corsOptions = {
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
 };
 app.use(cors(corsOptions));
-app.use(helmet());
+// app.use(helmet());
 
 //Route imports
 const productRoute = require("./routes/productRoute");

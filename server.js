@@ -1,4 +1,6 @@
 const app = require("./app");
+const https = require("https");
+const fs = require("fs");
 
 require("dotenv").config();
 
@@ -13,8 +15,19 @@ process.on("uncaughtException", (err) => {
 //connect database function call here
 connectDatabase();
 
-const server = app.listen(process.env.PORT, () => {
-  console.log(`Server is working on http://localhost:${process.env.PORT}`);
+const options = {
+  key: fs.readFileSync("./config/key.pem"),
+  cert: fs.readFileSync("./config/cert.pem"),
+};
+
+const port = process.env.PORT || 5000;
+
+// const server = app.listen(port, () => {
+//   console.log(`Server is working on http://localhost:${process.env.PORT}`);
+// });
+
+const server = https.createServer(options, app).listen(port, () => {
+  console.log(`App running on port ${port}...`);
 });
 
 //unhandle Promise rejection
