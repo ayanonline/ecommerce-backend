@@ -3,12 +3,25 @@ const errMidleware = require("./middleware/error");
 const cookiParser = require("cookie-parser");
 const cors = require("cors");
 const app = express();
+const { webhookCheckout } = require("./controllers/orderController");
 
-const bodyParser = require("body-parser");
+//Route imports
+const productRoute = require("./routes/productRoute");
+const userRoute = require("./routes/userRoute");
+const orderRoute = require("./routes/orderRoute");
+const cartRoute = require("./routes/cartRoute");
+const addressRoute = require("./routes/addressRoute");
+
+// stripe webhook checkout
+app.post(
+  "/webhook-checkout",
+  express.raw({ type: "application/json" }),
+  webhookCheckout
+);
 
 app.use(express.json());
 app.use(cookiParser());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 
 const corsOptions = {
   origin: [
@@ -23,13 +36,6 @@ const corsOptions = {
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
 };
 app.use(cors(corsOptions));
-
-//Route imports
-const productRoute = require("./routes/productRoute");
-const userRoute = require("./routes/userRoute");
-const orderRoute = require("./routes/orderRoute");
-const cartRoute = require("./routes/cartRoute");
-const addressRoute = require("./routes/addressRoute");
 
 app.use("/api/v1/products", productRoute);
 app.use("/api/v1/user", userRoute);

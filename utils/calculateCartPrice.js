@@ -23,7 +23,7 @@ const calculateCartPrice = (cart) => {
     totalAmount,
     totalItems: itemsWithSubtotals.length,
   };
-  console.log(cartWithSubtotals);
+
   return cartWithSubtotals;
 };
 

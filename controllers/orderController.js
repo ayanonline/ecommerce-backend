@@ -4,6 +4,7 @@ const Cart = require("../models/cartModel");
 const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncError = require("../middleware/catchAsyncError");
 const calculateCartPrice = require("../utils/calculateCartPrice");
+require("dotenv").config();
 
 // Create new Order
 exports.newOrder = catchAsyncError(async (req, res, next) => {
@@ -186,13 +187,8 @@ exports.webhookCheckout = (req, res, next) => {
   }
 
   if (event.type === "checkout.session.completed")
-    createBookingCheckout(event.data.object);
+    // createBookingCheckout(event.data.object);
+    console.log("Order success");
 
   res.status(200).json({ received: true });
 };
-
-// // exports.createBooking = factory.createOne(Booking);
-// // exports.getBooking = factory.getOne(Booking);
-// // exports.getAllBookings = factory.getAll(Booking);
-// // exports.updateBooking = factory.updateOne(Booking);
-// // exports.deleteBooking = factory.deleteOne(Booking);
