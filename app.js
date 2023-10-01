@@ -16,6 +16,7 @@ const corsOptions = {
 
     "http://localhost:5173",
     "https://your-freshgrocery.netlify.app",
+    "https://freshgroceri.netlify.app",
     "http://your-freshgrocery.s3-website.ap-south-1.amazonaws.com",
   ],
   credentials: true, // Allow credentials (cookies)
