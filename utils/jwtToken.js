@@ -10,6 +10,7 @@ const sendToken = (user, statusCode, res) => {
     ),
     httpOnly: true,
     sameSite: "None",
+    secure: false,
   };
 
   if (process.env.NODE_ENV === "production") options.secure = true;
