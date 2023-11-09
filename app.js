@@ -28,8 +28,8 @@ const corsOptions = {
     // URL er last e kokhon o '/' debe na
 
     "http://localhost:5173",
-    "https://your-freshgrocery.netlify.app",
-    "https://freshgroceri.netlify.app",
+    "http://localhost:3000",
+    "https://freshgrocerie.netlify.app",
     "http://your-freshgrocery.s3-website.ap-south-1.amazonaws.com",
   ],
   credentials: true, // Allow credentials (cookies)
